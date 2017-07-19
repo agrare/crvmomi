@@ -7,3 +7,8 @@ authors:
 crystal: 0.23.1
 
 license: MIT
+
+dependencies:
+  simple_soap:
+    github: agrare/simple_soap
+    branch: master
