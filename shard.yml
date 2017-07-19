@@ -1,0 +1,9 @@
+name: crvmomi
+version: 0.1.0
+
+authors:
+  - Adam Grare <agrare@redhat.com>
+
+crystal: 0.23.1
+
+license: MIT
