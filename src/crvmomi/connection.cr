@@ -68,7 +68,7 @@ module CrVmomi
 
     def soap_envelope(&block : XML::Builder -> _)
       header_proc = build_header? ? ->build_header(XML::Builder) : nil
-      SimpleSoap.soap_envelope(header_proc, &block)
+      SimpleSoap.envelope(header_proc, &block)
     end
 
     def request(soap_action, soap_body)
