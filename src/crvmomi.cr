@@ -1,4 +1,4 @@
-require "./crvmomi/*"
+require "./crvmomi/**"
 
 module CrVmomi
   # TODO Put your code here
