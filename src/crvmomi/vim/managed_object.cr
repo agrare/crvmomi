@@ -6,8 +6,8 @@ module CrVmomi
     def initialize(@connection, @_ref)
     end
 
-    def wsdl_name
-      self.class.name.split("::").last
+    def self.wsdl_name
+      name.split("::").last
     end
   end
 end
