@@ -3,7 +3,7 @@ require "simple_soap"
 module CrVmomi
   class Vmodl < Connection
     alias ParamType  = NamedTuple("name": String, "is-array": Bool, "is-optional": Bool, "version-id-ref": String?, "wsdl_type": String)
-    alias ResultType = NamedTuple("is-task": Bool, "is-array": Bool, "is-optional": Bool, "version-id-ref": String?, "wsdl_type": String)
+    alias ResultType = NamedTuple("is-task": Bool, "is-array": Bool, "is-optional": Bool, "version-id-ref": String?, "wsdl_type": String?)
     alias DescType   = NamedTuple("params": Array(ParamType), "results": ResultType)
 
     getter namespace
@@ -15,7 +15,7 @@ module CrVmomi
       super(host, port, ssl, insecure)
     end
 
-    def call(method, desc : DescType, this, params)
+    def call(method, desc, this, params)
       soap_action = "" # Unused by VIM endpoint
       soap_body   = soap_envelope do |xml|
         xml.element(method, {"xmlns" => namespace}) do
@@ -23,14 +23,23 @@ module CrVmomi
           desc["params"].each do |param|
             name = param["name"]
             type = param["wsdl_type"]
-            val  = params[name]
 
-            xml.element(name, {"type" => type}) { xml.text val }
+            if params.has_key?(name)
+              val = params[name]
+            elsif !param["is-optional"]
+              raise "Missing argument: #{name}"
+            end
+
+            xml.element(name, {"type" => type}) do
+              xml.text val unless val.nil?
+            end
           end
         end
       end
 
-      request(soap_action, soap_body)
+      soap_response, http_response = request(soap_action, soap_body)
+
+      soap_response
     end
   end
 end
