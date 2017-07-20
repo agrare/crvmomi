@@ -2,8 +2,8 @@ require "./vmodl"
 
 module CrVmomi
   class VIM < Vmodl
-    def self.connect(host, port = nil, ssl = true, insecure = false)
-      new(host, port, ssl, insecure).tap do |vim|
+    def self.connect(host, port = nil, ssl = true, insecure = false, debug = false)
+      new(host, port, ssl: ssl, insecure: insecure, debug: debug).tap do |vim|
         vim.serviceInstance.retrieve_service_content
       end
     end

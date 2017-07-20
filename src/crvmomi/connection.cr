@@ -8,12 +8,13 @@ module CrVmomi
     getter port : Int32
     getter ssl : Bool
     getter insecure : Bool
+    getter debug : Bool
     getter read_timeout : Int32
     getter connect_timeout : Int32
 
     @http : HTTP::Client?
 
-    def initialize(@host, port = nil, @ssl = true, @insecure = false, @read_timeout = 1_000_000, @connect_timeout = 60)
+    def initialize(@host, port = nil, @ssl = true, @insecure = false, @debug = false, @read_timeout = 1_000_000, @connect_timeout = 60)
       @port = port || (@ssl ? 443 : 80)
       @http = nil
       @path = "/sdk"
@@ -53,15 +54,20 @@ module CrVmomi
     delegate soap_envelope, to: SimpleSoap
 
     def request(soap_action, soap_body)
-      begin
-        soap_response, http_response = SimpleSoap.request(http, path, soap_action, soap_body, cookie)
-        @cookie = http_response.headers["set-cookie"] if http_response.headers.has_key?("set-cookie")
+      puts "Request:\n#{soap_body}\n" if debug
 
-        soap_response
-      rescue ex
-        restart_http
-        raise ex
-      end
+      soap_response, http_response =
+        begin
+          SimpleSoap.request(http, path, soap_action, soap_body, cookie)
+        rescue ex
+          restart_http
+          raise ex
+        end
+
+      puts "Response:\n#{soap_response}\n" if debug
+
+      @cookie = http_response.headers["set-cookie"] if http_response.headers.has_key?("set-cookie")
+      soap_response
     end
   end
 end

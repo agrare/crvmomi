@@ -9,10 +9,10 @@ module CrVmomi
     getter namespace
     property version
 
-    def initialize(host, port = nil, ssl = true, insecure = false, @version = "6.5")
+    def initialize(host, port = nil, ssl = true, insecure = false, debug = false, @version = "6.5")
       @namespace = "urn:vim25"
 
-      super(host, port, ssl, insecure)
+      super(host, port, ssl: ssl, insecure: insecure, debug: debug)
     end
 
     def call(method, desc, this, params)
