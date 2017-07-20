@@ -2,27 +2,27 @@ module CrVmomi
   class VIM::SessionManager < VIM::ManagedObject
     def login(userName, password, locale = nil)
       desc = {
-        "params": [
+        params: [
           {
-            "name": "userName",
+            name: "userName",
             "is-array": false,
             "is-optional": false,
             "version-id-ref": nil,
-            "wsdl_type": "xsd:string"
+            wsdl_type: "xsd:string"
           },
           {
-            "name": "password",
+            name: "password",
             "is-array": false,
             "is-optional": false,
             "version-id-ref": nil,
-            "wsdl_type": "xsd:string"
+            wsdl_type: "xsd:string"
           },
           {
-            "name": "locale",
+            name: "locale",
             "is-array": false,
             "is-optional": true,
             "version-id-ref": nil,
-            "wsdl_type": "xsd:string"
+            wsdl_type: "xsd:string"
           }
         ],
         result: {
@@ -30,13 +30,13 @@ module CrVmomi
           "is-optional": false,
           "is-task": false,
           "version-id-ref": nil,
-          "wsdl_type": "UserSession"
+          wsdl_type: "UserSession"
         }
       }
 
       params = {
-        "userName": userName,
-        "password": password
+        userName: userName,
+        password: password
       }
       params["locale"] = locale unless locale.nil?
 
@@ -51,7 +51,7 @@ module CrVmomi
           "is-optional": false,
           "is-task": false,
           "version-id-ref": nil,
-          "wsdl_type": nil
+          wsdl_type: nil
         }
       }
       params = {} of String => String
