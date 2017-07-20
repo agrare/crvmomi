@@ -21,6 +21,10 @@ module CrVmomi
       restart_http
     end
 
+    def vc_session_cookie
+      cookie.try &.split('"')[1]
+    end
+
     def http
       @http.not_nil!
     end
@@ -51,7 +55,21 @@ module CrVmomi
       @http = new_http
     end
 
-    delegate soap_envelope, to: SimpleSoap
+    private def build_header(xml : XML::Builder)
+      session_cookie = vc_session_cookie
+      if session_cookie
+        xml.element("vcSessionCookie") { xml.text session_cookie }
+      end
+    end
+
+    private def build_header?
+      !cookie.nil?
+    end
+
+    def soap_envelope(&block : XML::Builder -> _)
+      header_proc = build_header? ? ->build_header(XML::Builder) : nil
+      SimpleSoap.soap_envelope(header_proc, &block)
+    end
 
     def request(soap_action, soap_body)
       puts "Request:\n#{soap_body}\n" if debug
