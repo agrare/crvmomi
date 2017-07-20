@@ -54,7 +54,10 @@ module CrVmomi
 
     def request(soap_action, soap_body)
       begin
-        SimpleSoap.request(http, path, soap_action, soap_body)
+        soap_response, http_response = SimpleSoap.request(http, path, soap_action, soap_body, cookie)
+        @cookie = http_response.headers["set-cookie"] if http_response.headers.has_key?("set-cookie")
+
+        soap_response
       rescue ex
         restart_http
         raise ex

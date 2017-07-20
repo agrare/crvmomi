@@ -37,9 +37,7 @@ module CrVmomi
         end
       end
 
-      soap_response, http_response = request(soap_action, soap_body)
-
-      soap_response
+      request(soap_action, soap_body)
     end
   end
 end
