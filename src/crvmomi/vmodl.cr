@@ -4,7 +4,7 @@ module CrVmomi
   class Vmodl < Connection
     alias ParamType  = NamedTuple("name": String, "is-array": Bool, "is-optional": Bool, "version-id-ref": String?, "wsdl_type": String)
     alias ResultType = NamedTuple("is-task": Bool, "is-array": Bool, "is-optional": Bool, "version-id-ref": String?, "wsdl_type": String?)
-    alias DescType   = NamedTuple("params": Array(ParamType), "results": ResultType)
+    alias DescType   = NamedTuple("params": Array(ParamType), "result": ResultType)
 
     getter namespace
     property version
@@ -15,7 +15,7 @@ module CrVmomi
       super(host, port, ssl: ssl, insecure: insecure, debug: debug)
     end
 
-    def call(method, desc, this, params)
+    def call(method, desc : DescType, this, params)
       soap_action = "" # Unused by VIM endpoint
       soap_body   = soap_envelope do |xml|
         xml.element(method, {"xmlns" => namespace}) do
@@ -41,15 +41,17 @@ module CrVmomi
 
 		def object_to_xml(xml, name, type, is_array, object)
 		  case object
-			when Array, BasicTypes::KeyValue
-			when BasicTypes::ManagedObject
-				xml.element(name, {"type" => type}) { xml.text object._ref }
-			when BasicTypes::DataObject
-			when BasicTypes::Enum
-			when Hash
-			when Symbol, String
-			  xml.element(name, {"type" => "xsd:string"}) { xml.text object.to_s }
-			end
+      when Array, BasicTypes::KeyValue
+      when BasicTypes::ManagedObject
+        xml.element(name, {"type" => type}) { xml.text object._ref }
+      when BasicTypes::DataObject
+        xml.element(name, {"type" => type}) do
+        end
+      when BasicTypes::Enum
+      when Hash
+      when Symbol, String
+        xml.element(name, {"type" => "xsd:string"}) { xml.text object.to_s }
+      end
     end
   end
 end

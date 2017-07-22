@@ -13,35 +13,35 @@ module CrVmomi
     end
 
     def create_filter(spec : VIM::PropertyFilterSpec, partialUpdates : Bool)
-      desc = {
-        params: [
-          {
-            name: "spec",
-            "is-array": false,
-            "is-optional": false,
-            "version-id-ref": nil,
-            wsdl_type: "PropertyFilterSpec"
-          },
-          {
-            name: "partialUpdates",
-            "is-array": false,
-            "is-optional": false,
-            "version-id-ref": nil,
-            "wsdl_type": "xsd:boolean"
-          }
+      desc = DescType.from({
+        "params" => [
+          ParamType.from({
+            "name" => "spec",
+            "is-array" => false,
+            "is-optional" => false,
+            "version-id-ref" => nil,
+            "wsdl_type" => "PropertyFilterSpec"
+          }),
+          ParamType.from({
+            "name" => "partialUpdates",
+            "is-array" => false,
+            "is-optional" => false,
+            "version-id-ref" => nil,
+            "wsdl_type" => "xsd:boolean"
+          })
         ],
-        result: {
-          "is-array": false,
-          "is-optional": false,
-          "is-task": false,
-          "version-id-ref": nil,
-          wsdl_type: "PropertyFilter"
-        }
-      }
+        "result" => ResultType.from({
+          "is-array" => false,
+          "is-optional" => false,
+          "is-task" => false,
+          "version-id-ref" => nil,
+          "wsdl_type" => "PropertyFilter"
+        })
+      })
 
       params = {
-        spec: spec,
-        partialUpdates: partialUpdates.to_s
+        "spec" => spec,
+        "partialUpdates" => partialUpdates
       }
 
       connection.call("CreateFilter", desc, self, params)

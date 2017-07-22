@@ -1,38 +1,38 @@
 module CrVmomi
   class VIM::SessionManager < VIM::ManagedObject
     def login(userName, password, locale = nil)
-      desc = {
-        params: [
-          {
-            name: "userName",
-            "is-array": false,
-            "is-optional": false,
-            "version-id-ref": nil,
-            wsdl_type: "xsd:string"
-          },
-          {
-            name: "password",
-            "is-array": false,
-            "is-optional": false,
-            "version-id-ref": nil,
-            wsdl_type: "xsd:string"
-          },
-          {
-            name: "locale",
-            "is-array": false,
-            "is-optional": true,
-            "version-id-ref": nil,
-            wsdl_type: "xsd:string"
-          }
+      desc = DescType.from({
+        "params" => [
+          ParamType.from({
+            "name" => "userName",
+            "is-array" => false,
+            "is-optional" => false,
+            "version-id-ref" => nil,
+            "wsdl_type" => "xsd:string"
+          }),
+          ParamType.from({
+            "name" => "password",
+            "is-array" => false,
+            "is-optional" => false,
+            "version-id-ref" => nil,
+            "wsdl_type" => "xsd:string"
+          }),
+          ParamType.from({
+            "name" => "locale",
+            "is-array" => false,
+            "is-optional" => true,
+            "version-id-ref" => nil,
+            "wsdl_type" => "xsd:string"
+          })
         ],
-        result: {
-          "is-array": false,
-          "is-optional": false,
-          "is-task": false,
-          "version-id-ref": nil,
-          wsdl_type: "UserSession"
-        }
-      }
+        "result" => ResultType.from({
+          "is-array" => false,
+          "is-optional" => false,
+          "is-task" => false,
+          "version-id-ref" => nil,
+          "wsdl_type" => "UserSession"
+        })
+      })
 
       params = {
         userName: userName,
@@ -44,16 +44,17 @@ module CrVmomi
     end
 
     def logout
-      desc = {
-        params: [] of ParamType,
-        result: {
-          "is-array": false,
-          "is-optional": false,
-          "is-task": false,
-          "version-id-ref": nil,
-          wsdl_type: nil
-        }
-      }
+      desc = DescType.from({
+        "params" => [] of ParamType,
+        "result" => ResultType.from({
+          "is-array" => false,
+          "is-optional" => false,
+          "is-task" => false,
+          "version-id-ref" => nil,
+          "wsdl_type" => nil
+        })
+      })
+
       params = {} of String => String
 
       connection.call("Logout", desc, self, params)
