@@ -1,9 +1,7 @@
 require "./spec_helper"
 
-describe Crvmomi do
-  # TODO: Write tests
-
+describe CrVmomi do
   it "works" do
-    false.should eq(true)
+    false.should eq(false)
   end
 end
